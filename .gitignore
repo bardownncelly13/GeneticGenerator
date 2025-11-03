@@ -1,3 +1,4 @@
+envs/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -5,9 +6,11 @@ __pycache__/
 
 # C extensions
 *.so
+venv/
 
 # Distribution / packaging
 .Python
+.python310
 build/
 develop-eggs/
 dist/
@@ -135,6 +138,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+
 .env
 .envrc
 .venv

@@ -1,2 +1,5 @@
-lief==0.13.2
+lief
 tqdm
+azure-ai-projects
+azure-identity
+openai
