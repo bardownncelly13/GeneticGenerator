@@ -1,0 +1,43 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+void encryptFile(const std::string &inputFilename, const std::string &outputFilename, int key) {
+    std::ifstream inputFile(inputFilename, std::ios::binary);
+    std::ofstream outputFile(outputFilename, std::ios::binary);
+    
+    char ch;
+    while (inputFile.get(ch)) {
+        outputFile.put(ch + key);
+    }
+    
+    inputFile.close();
+    outputFile.close();
+}
+
+void decryptFile(const std::string &inputFilename, const std::string &outputFilename, int key) {
+    std::ifstream inputFile(inputFilename, std::ios::binary);
+    std::ofstream outputFile(outputFilename, std::ios::binary);
+    
+    char ch;
+    while (inputFile.get(ch)) {
+        outputFile.put(ch - key);
+    }
+    
+    inputFile.close();
+    outputFile.close();
+}
+
+int main() {
+    std::string originalFile = "input.txt";
+    std::string encryptedFile = "encrypted.txt";
+    std::string decryptedFile = "decrypted.txt";
+    int key = 5;
+
+    encryptFile(originalFile, encryptedFile, key);
+    decryptFile(encryptedFile, decryptedFile, key);
+
+    std::cout << "Encryption and decryption complete." << std::endl;
+
+    return 0;
+}
