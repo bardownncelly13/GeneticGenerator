@@ -10,7 +10,7 @@ def create_resource_file(binary_path, output_folder):
     # Escape backslashes for Windows paths
     escaped_path = binary_path.replace("\\", "\\\\")
     
-    rc_content = f'#define IDR_EXE1 101\nIDR_EXE1 101 RCDATA "{escaped_path}"\n'
+    rc_content = f'#define IDR_EXE1 101\nIDR_EXE1 RCDATA "{escaped_path}"\n'
 
     with open(rc_filename, "w", encoding="utf-8") as f:
         f.write(rc_content)

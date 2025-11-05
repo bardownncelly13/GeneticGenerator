@@ -3,7 +3,11 @@ envs/
 __pycache__/
 *.py[codz]
 *$py.class
-
+crypt/
+double_encrypted_binaries/
+encrypted_binaries/
+Generated_DropperCPPfiles/
+resfiles/
 # C extensions
 *.so
 venv/

