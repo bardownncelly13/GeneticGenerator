@@ -13,7 +13,7 @@ def get_id_or_name(entry):
 
 def walk_resources(pe):
     if not hasattr(pe, "DIRECTORY_ENTRY_RESOURCE"):
-        print("❌ No resource directory found.")
+        print(" No resource directory found.")
         return
     rsrc_section = None
     for s in pe.sections:
@@ -50,7 +50,7 @@ def walk_resources(pe):
                 entries.append((path, file_offset, data_size, rel))
 
     if not entries:
-        print("⚠️  No individual resource entries discovered.")
+        print(" No individual resource entries discovered.")
         return
 
     entries.sort(key=lambda e: e[1])
@@ -69,7 +69,7 @@ if __name__ == "__main__":
 
     pe_path = Path(sys.argv[1])
     if not pe_path.exists():
-        print(f"❌ File not found: {pe_path}")
+        print(f" File not found: {pe_path}")
         sys.exit(1)
 
     pe = pefile.PE(str(pe_path))

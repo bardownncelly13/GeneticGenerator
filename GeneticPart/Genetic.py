@@ -79,14 +79,14 @@ def fitness(chromosome: bytes, original: bytes = None) -> float:
     return 1.0 - normalized_entropy
 
 def tournament_selection(pop: List[bytes], fit_scores: List[float], k: int = TOURNAMENT_K) -> bytes: 
-    """Select one individual using tournament selection (k competitors)."""
+    
     assert len(pop) == len(fit_scores)
     competitors = random.sample(list(zip(pop, fit_scores)), k)
     return max(competitors, key=lambda x: x[1])[0]
 
 def crossover(p1: bytes, p2: bytes, mask: List[bool]) -> Tuple[bytes, bytes]: 
 
-    """Perform one-point crossover, respecting mask (False = locked/immutable)."""
+    # mutate with mask on imutable sections
     L = min(len(p1), len(p2))
     p1, p2 = p1[:L], p2[:L]
 

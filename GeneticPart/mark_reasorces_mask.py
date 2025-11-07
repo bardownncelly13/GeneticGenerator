@@ -74,12 +74,11 @@ def getmask(pe_path: str, exclude_ids: list[int]) -> list[tuple[int, int]]:
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python3 mark_resources_ranges.py <pe_file> <id1> [<id2> ...]")
         sys.exit(1)
 
     pe_path = Path(sys.argv[1])
     ids = [int(x) for x in sys.argv[2:]]
     one_ranges = getmask(pe_path, ids)
 
-    print("\n✅ Ranges representing bytes marked as 1:")
+    print("\n Ranges representing bytes marked as 1:")
     print(one_ranges)
