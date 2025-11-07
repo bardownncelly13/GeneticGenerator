@@ -37,7 +37,6 @@ def create_crypt():
     "modular exponentiation per byte"
     ]
 
-    # Pick a random encryption type
     chosen_type = random.choice(encryption_types)
     print(f"🎲 Using encryption type: {chosen_type}")
 
@@ -67,9 +66,6 @@ def create_crypt():
 
     content = response.choices[0].message.content
 
-    # ----------------------------
-    # 3️⃣ Extract C++ code
-    # ----------------------------
     match = re.search(r"```(?:cpp|c\+\+)?\n([\s\S]*?)```", content)
     if not match:
         raise ValueError("❌ Could not find C++ code block in model response!")
@@ -92,20 +88,16 @@ def create_crypt():
     "BYTE": "<windows.h>",
     "DWORD": "<windows.h>",
     "Sleep": "<windows.h>",
-    # Add more as needed
     }
 
-    # Detect existing headers in the code
     existing_headers = set(re.findall(r'#include\s+<([^>]+)>', code))
     existing_headers = set(h.lower() for h in re.findall(r'#include\s+<([^>]+)>', code))
-    # Determine which headers need to be added
     headers_to_add = set()
     for keyword, header in required_headers.items():
         if re.search(r'\b' + re.escape(keyword) + r'\b', code):
             if header.strip("<>") not in existing_headers:
                 headers_to_add.add(header)
 
-    # Prepend missing headers
     if headers_to_add:
         headers_str = "\n".join(f"#include {h}" for h in sorted(headers_to_add))
         code = headers_str + "\n\n" + code
@@ -126,26 +118,22 @@ def create_crypt():
     print(f"💾 Saved C++ code to: {cpp_path}")
     Generate_Header.generate_header(cpp_path)
 
-    # ----------------------------
-    #  Compile and run
-    # ----------------------------
     print("🧱 Compiling with g++...")
     compile_result = subprocess.run(
         ["x86_64-w64-mingw32-g++", "-std=c++17", cpp_path, "-o", exe_path],
         capture_output=True, text=True
     )
 
-    header_path = os.path.splitext(cpp_path)[0] + ".h"  # assuming Generate_Header created a .h
+    header_path = os.path.splitext(cpp_path)[0] + ".h" 
 
     if compile_result.returncode != 0:
         print("❌ Compilation failed:\n", compile_result.stderr)
-        # Cleanup everything
+
         for f in [cpp_path, exe_path, header_path]:
             if os.path.exists(f):
                 os.remove(f)
                 print(f"🗑️ Deleted: {f}")
     else:
-        # Compiled successfully, now run the round-trip test
         works = ensureCryptworks.test(cpp_path)
         if works:
             print("✅ Test passed — keeping C++ source and header.")
@@ -155,7 +143,6 @@ def create_crypt():
                 if os.path.exists(f):
                     os.remove(f)
                     print(f"🗑️ Deleted: {f}")
-        # Always remove temporary executable
         if os.path.exists(exe_path):
             os.remove(exe_path)
             print(f"🗑️ Deleted temporary binary: {exe_path}")

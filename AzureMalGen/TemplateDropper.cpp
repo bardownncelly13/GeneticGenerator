@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <wincrypt.h>
-
 #define IDR_EXE1 101
+/*
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dont remove comments they are used for inserting code 
+*/ 
 
 //define key1
 //define key2

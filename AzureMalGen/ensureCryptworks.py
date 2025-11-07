@@ -3,7 +3,6 @@ import shutil
 import subprocess
 import re
 
-# Compile flags for MinGW, without -mwindows
 LINK_FLAGS = [
     "-static", "-static-libgcc", "-static-libstdc++",
     "-lgdiplus", "-luser32", "-lgdi32", "-lole32", "-luuid",
@@ -18,7 +17,7 @@ def test(cpp_path, compiler="x86_64-w64-mingw32-g++", key=77, block_size=1024):
     test_cpp = cpp_path.replace(".cpp", "_test.cpp")
     shutil.copy(cpp_path, test_cpp)
 
-    # Remove existing main()
+
     with open(test_cpp, "r", encoding="utf-8") as f:
         code = f.read()
     main_pattern = re.compile(r'\bint\s+main\s*\([^)]*\)\s*\{[\s\S]*?\}', re.MULTILINE)
@@ -26,7 +25,7 @@ def test(cpp_path, compiler="x86_64-w64-mingw32-g++", key=77, block_size=1024):
     with open(test_cpp, "w", encoding="utf-8") as f:
         f.write(code)
 
-    # Append test main
+
     test_main = f"""
 #include <iostream>
 #include <fstream>
@@ -100,7 +99,6 @@ int main() {{
         _cleanup(test_cpp, exe_test)
         return 0
 
-    # Use Wine if not Windows
     if os.name != "nt":
         run_cmd = ["wine", exe_test]
     else:

@@ -6,8 +6,6 @@ def create_resource_file(binary_path, output_folder):
     name, _ = os.path.splitext(filename)
 
     rc_filename = os.path.join(output_folder, f"{name}.rc")
-
-    # Escape backslashes for Windows paths
     escaped_path = binary_path.replace("\\", "\\\\")
     
     rc_content = (
@@ -26,7 +24,7 @@ def create_resource_file(binary_path, output_folder):
 def generate_all_resources(input_folder, output_folder=None):
     """Generate .rc files for all binaries inside input_folder."""
     if output_folder is None:
-        output_folder = input_folder  # default to same folder
+        output_folder = input_folder 
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)

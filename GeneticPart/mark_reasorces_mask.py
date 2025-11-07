@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 import pefile
 import sys
 from pathlib import Path
@@ -72,7 +72,6 @@ def getmask(pe_path: str, exclude_ids: list[int]) -> list[tuple[int, int]]:
         raise FileNotFoundError(f"PE file not found: {pe_path}")
     return build_one_ranges(pe_path, exclude_ids)
 
-# CLI entry point for manual testing
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         print("Usage: python3 mark_resources_ranges.py <pe_file> <id1> [<id2> ...]")

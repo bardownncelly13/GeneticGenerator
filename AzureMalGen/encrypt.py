@@ -15,7 +15,6 @@ cpp_file = args.cpp
 exe_file = cpp_file.replace(".cpp", ".out")
 key = args.key
 
-# Output directory for encrypted binaries
 output_dir = args.output
 os.makedirs(output_dir, exist_ok=True)
 
@@ -38,7 +37,6 @@ with open(cpp_file, "r", encoding="utf-8") as f:
 main_pattern = r'int\s+main\s*\([^)]*\)\s*\{[\s\S]*?\}'
 code = re.sub(main_pattern, "", code)
 
-# Append a wrapper main() that calls encryptFile
 wrapper_main = f"""
 int main(int argc, char* argv[]) {{
     if(argc != 4) return 1;
@@ -48,7 +46,6 @@ int main(int argc, char* argv[]) {{
 """
 code += "\n" + wrapper_main
 
-# Save modified C++ file
 with open(cpp_file, "w", encoding="utf-8") as f:
     f.write(code)
 print("📝 main() replaced with wrapper main()")

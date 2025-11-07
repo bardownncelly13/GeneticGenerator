@@ -1,10 +1,9 @@
-#!/usr/bin/env python3
+
 import pefile
 import sys
 from pathlib import Path
 
 def get_id_or_name(entry):
-    # pefile gives .id for numeric types, .name for string names
     try:
         if entry.name is not None:
             return str(entry.name)
@@ -16,8 +15,6 @@ def walk_resources(pe):
     if not hasattr(pe, "DIRECTORY_ENTRY_RESOURCE"):
         print("❌ No resource directory found.")
         return
-
-    # find .rsrc section to compute relative offsets
     rsrc_section = None
     for s in pe.sections:
         name = s.Name.decode(errors="ignore").rstrip("\x00")
@@ -35,19 +32,15 @@ def walk_resources(pe):
 
     entries = []
 
-    # top-level: iterate resource types (e.g. RT_RCDATA = 10 = "/10")
     for res_type in pe.DIRECTORY_ENTRY_RESOURCE.entries:
         type_id = get_id_or_name(res_type)
-        # second-level: names / ids under this type
         if not hasattr(res_type, "directory"):
             continue
         for res_name in res_type.directory.entries:
             name_id = get_id_or_name(res_name)
-            # third-level: language entries (the actual data)
             if not hasattr(res_name, "directory"):
                 continue
             for res_lang in res_name.directory.entries:
-                # res_lang.data.struct has OffsetToData and Size
                 data_struct = res_lang.data.struct
                 data_rva = data_struct.OffsetToData
                 data_size = data_struct.Size
@@ -60,7 +53,6 @@ def walk_resources(pe):
         print("⚠️  No individual resource entries discovered.")
         return
 
-    # Print tree-like output (sorted by file offset)
     entries.sort(key=lambda e: e[1])
     print("Resource tree (TYPE / NAME / LANG) with file offsets and sizes:\n")
     for path, offset, size, rel in entries:
