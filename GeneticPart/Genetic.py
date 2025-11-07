@@ -6,7 +6,9 @@ from typing import List, Tuple, Optional
 import hashlib
 import math
 from collections import Counter
-
+import math
+from collections import Counter
+import mark_reasorces_mask
 try:
     import lief
 except Exception:
@@ -15,7 +17,7 @@ except Exception:
 
 # ---------- Parameters ----------
 TARGET_SIZE = int(4.9 * 1024 * 1024)     # 4.9 MB individuals
-MAX_APPEND_CHUNK = 16 * 1024            # 16 KB per appended chunk
+MAX_APPEND_CHUNK = 1000 * 1024            # 1MB
 MIN_APPEND_CHUNK = 1024                 # 1 KB min chunk
 MUTATION_BYTE_COUNT = 16                # mutate up to this many bytes per mutate call
 TOURNAMENT_K = 3
@@ -71,14 +73,21 @@ def _read_random_chunk(path: Path, max_bytes: int = MAX_APPEND_CHUNK) -> bytes: 
         return f.read(chunk_size)
 
 # ---------- GA building blocks ----------
-def fitness(chromosome: bytes) -> float: #used to determine the quality of a gene
+def fitness(chromosome: bytes, original: bytes = None) -> float:
     if not chromosome:
         return 0.0
-    counts = Counter(chromosome)
+
     total = len(chromosome)
+    counts = Counter(chromosome)
+
+    # Shannon entropy in bits
     entropy = -sum((count / total) * math.log2(count / total) for count in counts.values())
-    # Normalize (max entropy for 8-bit data = 8 bits)
-    return entropy / 8.0
+
+    # Normalize: max entropy for 8-bit = 8 bits
+    normalized_entropy = entropy / 8.0
+
+    # Invert: low entropy is high fitness
+    return 1.0 - normalized_entropy
 
 def tournament_selection(pop: List[bytes], fit_scores: List[float], k: int = TOURNAMENT_K) -> bytes: #picks the best fitted
     """Select one individual using tournament selection (k competitors)."""
@@ -178,7 +187,7 @@ def genetic_algo(popsize: int,
     population = generate_population(popsize, base, goodware_path)
 
     # Lock the first 512 bytes (headers)
-    IMMUTABLE_RANGES = [(0, 512)]
+    IMMUTABLE_RANGES = mark_reasorces_mask.getmask(exe_path,[102])
     mask = make_mask(TARGET_SIZE, IMMUTABLE_RANGES)
 
     for gen in range(generations):

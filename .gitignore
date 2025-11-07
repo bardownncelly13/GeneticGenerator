@@ -8,10 +8,11 @@ double_encrypted_binaries/
 encrypted_binaries/
 Generated_DropperCPPfiles/
 resfiles/
+finalexes/
 # C extensions
 *.so
 venv/
-
+/.vscode/
 # Distribution / packaging
 .Python
 .python310

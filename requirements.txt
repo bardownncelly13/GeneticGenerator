@@ -3,3 +3,4 @@ tqdm
 azure-ai-projects
 azure-identity
 openai
+pefile
