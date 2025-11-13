@@ -1,6 +1,6 @@
 import os
 
-def create_resource_file(binary_path, output_folder):
+def create_resource_file(binary_path, output_folder,extragoodware = 0):
     """Generate a .rc file for a given binary, embedding it as IDR_EXE1 101."""
     filename = os.path.basename(binary_path)
     name, _ = os.path.splitext(filename)

@@ -5,10 +5,12 @@ from pathlib import Path
 from typing import List, Tuple, Optional
 import hashlib
 import math
+import tempfile
 from collections import Counter
 import math
 from collections import Counter
 import mark_reasorces_mask
+import re
 try:
     import lief
 except Exception:
@@ -67,17 +69,19 @@ def _read_random_chunk(path: Path, max_bytes: int = MAX_APPEND_CHUNK) -> bytes:
         f.seek(start)
         return f.read(chunk_size)
 def fitness(chromosome: bytes, original: bytes = None) -> float:
-    if not chromosome:
+    url = f"http://127.0.0.1:8080{endpoint}" #edit the docker endpoint as needed
+
+    try:
+        headers = {"Content-Type": "application/octet-stream"}
+        response = requests.post(url, data=chromosome, headers=headers, timeout=30)
+        response.raise_for_status()
+        result = response.json()
+        print(result) 
+        return float(result.get("score", 0.0))
+    except requests.exceptions.RequestException as e:
+        print(f"Error querying container: {e}")
         return 0.0
-
-    total = len(chromosome)
-    counts = Counter(chromosome)
-
-    entropy = -sum((count / total) * math.log2(count / total) for count in counts.values())
-
-    normalized_entropy = entropy / 8.0
-    return 1.0 - normalized_entropy
-
+    
 def tournament_selection(pop: List[bytes], fit_scores: List[float], k: int = TOURNAMENT_K) -> bytes: 
     
     assert len(pop) == len(fit_scores)
@@ -195,8 +199,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--base", required=True, help="Base EXE to seed population")
     p.add_argument("--goodware", required=True, help="Directory containing benign EXEs to sample chunks from")
-    p.add_argument("--pop", type=int, default=10, help="Population size (even)")
-    p.add_argument("--gens", type=int, default=20, help="Generations")
+    p.add_argument("--pop", type=int, default=8, help="Population size (even)")
+    p.add_argument("--gens", type=int, default=8, help="Generations")
     p.add_argument("--out", default=None, help="Optional output file to save best individual (raw bytes)")
     args = p.parse_args()
 
@@ -206,7 +210,7 @@ if __name__ == "__main__":
 
     best = genetic_algo(popsize=args.pop,
                         generations=args.gens,
-                        exe_path=base_path,
+                        exe_path=base_path,htop
                         goodware_path=goodware_dir,
                         save_best_to=out_path)
 

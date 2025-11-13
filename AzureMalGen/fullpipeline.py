@@ -43,6 +43,7 @@ parser = argparse.ArgumentParser(description="Full pipeline of encrypting and de
 parser.add_argument("--binaries", "--b", nargs="+", required=True, help="List of binaries or folders to encrypt")
 parser.add_argument("--EncryptCount","--e", type=int, default=1, help="How many times to run encryption")
 parser.add_argument("--key", type=int, default=random.randint(1, 255), help="Encryption key")
+parser.add_argument("--genetic","--g",type=int,default=1,help = "apply the genetic algo to the binary")
 args = parser.parse_args()
 
 binaries = args.binaries
