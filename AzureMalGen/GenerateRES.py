@@ -1,24 +1,44 @@
 import os
 
-def create_resource_file(binary_path, output_folder,extragoodware = 0):
-    """Generate a .rc file for a given binary, embedding it as IDR_EXE1 101."""
+import os
+import random
+
+def create_resource_file(binary_path, output_folder, extragoodware=0):
     filename = os.path.basename(binary_path)
     name, _ = os.path.splitext(filename)
 
     rc_filename = os.path.join(output_folder, f"{name}.rc")
     escaped_path = binary_path.replace("\\", "\\\\")
-    
-    rc_content = (
-    '#define IDR_EXE1 101\n'
-    '#define IDR_PNG1 102\n'
-    f'IDR_EXE1 RCDATA "{escaped_path}"\n'
-    f'IDR_PNG1 RCDATA "{"./reasorcesToUse/per_atom_activities-1100x600.png"}"\n'
-    )
 
+    rc_lines = []
+
+    if extragoodware > 0:
+        goodware_folder = os.path.abspath("../GeneticPart/goodware/")
+        goodware_files = [
+            os.path.join(goodware_folder, f)
+            for f in os.listdir(goodware_folder)
+            if os.path.isfile(os.path.join(goodware_folder, f))
+        ]
+
+        if len(goodware_files) == 0:
+            print("⚠ No goodware files found!")
+        else:
+            selected = random.sample(goodware_files, min(extragoodware, len(goodware_files)))
+
+            resource_id = 102  # Start AFTER 101
+            for gw_path in selected:
+                gw_path_esc = gw_path.replace("\\", "\\\\")
+                rc_lines.append(f"#define IDR_EXE{resource_id} {resource_id}\n")
+                rc_lines.append(f'IDR_EXE{resource_id} RCDATA "{gw_path_esc}"\n')
+                resource_id += 1
+
+    rc_lines.append("#define IDR_EXE1 101\n")
+    rc_lines.append(f'IDR_EXE1 RCDATA "{escaped_path}"\n')
     with open(rc_filename, "w", encoding="utf-8") as f:
-        f.write(rc_content)
+        f.writelines(rc_lines)
 
     print(f"✅ Created resource file: {rc_filename}")
+
 
 
 def generate_all_resources(input_folder, output_folder=None):
