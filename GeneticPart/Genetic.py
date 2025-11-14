@@ -8,8 +8,8 @@ import math
 import tempfile
 from collections import Counter
 import math
-from collections import Counter
 import mark_reasorces_mask
+import requests
 import re
 try:
     import lief
@@ -153,7 +153,8 @@ def genetic_algo(popsize: int,
                  generations: int,
                  exe_path: Path,
                  goodware_path: Path,
-                 save_best_to: Optional[Path] = None):
+                 save_best_to: Optional[Path] = None,
+                 mask_ids: list[int] | None = None):
 
     base = get_genes(exe_path)
     goodware_files = list_exes(goodware_path)
@@ -165,7 +166,11 @@ def genetic_algo(popsize: int,
     #####
     ###!!!! important 
     #####
-    IMMUTABLE_RANGES = mark_reasorces_mask.getmask(exe_path,[102])  # select reasorces that can be edited
+    if mask_ids is not None:
+        IMMUTABLE_RANGES = mark_reasorces_mask.getmask(exe_path, mask_ids)
+    else:
+        # Default → no mask
+        IMMUTABLE_RANGES = []
     mask = make_mask(TARGET_SIZE, IMMUTABLE_RANGES)
 
     for gen in range(generations):
@@ -202,6 +207,7 @@ if __name__ == "__main__":
     p.add_argument("--pop", type=int, default=8, help="Population size (even)")
     p.add_argument("--gens", type=int, default=8, help="Generations")
     p.add_argument("--out", default=None, help="Optional output file to save best individual (raw bytes)")
+    p.add_argument("--masks", nargs="*", type=int, default=None)
     args = p.parse_args()
 
     base_path = Path(args.base)
@@ -210,8 +216,10 @@ if __name__ == "__main__":
 
     best = genetic_algo(popsize=args.pop,
                         generations=args.gens,
-                        exe_path=base_path,htop
+                        exe_path=base_path,
                         goodware_path=goodware_dir,
-                        save_best_to=out_path)
+                        save_best_to=out_path,
+                        mask_ids=args.masks 
+                        )
 
     print("Done. Best fitness:", fitness(best))
