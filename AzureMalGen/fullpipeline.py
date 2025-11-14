@@ -19,7 +19,8 @@ base_dirs = {
     "double_encrypted_binaries": "generated/double_encrypted_binaries",
     "resfiles": "generated/resfiles",
     "Generated_DropperCPPfiles": "generated/Generated_DropperCPPfiles",
-    "finalexes": "generated/finalexes"
+    "finalexes": "generated/finalexes",
+    "base64encrypted":"generated/base64encrypted"
 }
 
 # Ensure all folders exist

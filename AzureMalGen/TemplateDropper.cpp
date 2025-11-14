@@ -36,8 +36,7 @@
 #include <ctime>        
 #include <thread>        
 #include <mutex>     
-#include <atomic>  
-#include <openssl/sha.h> 
+#include <atomic>   
 #define IDR_EXE1 101
 /*
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! dont remove comments they are used for inserting code 

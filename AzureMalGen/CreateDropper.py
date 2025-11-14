@@ -38,28 +38,27 @@ BASE64_SNIPPET = r'''BYTE* DecodeBase64Buffer(const char* base64Data, DWORD base
     *outLen = decodedLen;
     return out;
 }'''
-BASE642_SNIPPET = r'''BYTE* buffer = decodedData;     
-    DWORD bufferSize = decodedSize;  
-    bool USE_BASE64 = true;
-    if (USE_BASE64) {
-        DWORD b64DecodedSize = 0;
+BASE642_SNIPPET = r'''bool USE_BASE64 = true;
+if (USE_BASE64) {
+    DWORD b64DecodedSize = 0;
 
-        BYTE* roundtrip = DecodeBase64Buffer(
-            (const char*)buffer,
-            bufferSize,
-            &b64DecodedSize
-        );
+    BYTE* roundtrip = DecodeBase64Buffer(
+        (const char*)decodedData,
+        decodedSize,
+        &b64DecodedSize
+    );
 
-        if (!roundtrip) {
-            wprintf(L"Base64 decode failed\n");
-            return;
-        }
+    if (!roundtrip) {
+        wprintf(L"Base64 decode failed\n");
+        free(decodedData); // clean up original buffer
+        return;
+    }
 
-        // Replace original pointer
-        free(buffer);
-        buffer = roundtrip;
-        bufferSize = b64DecodedSize;
-    }'''
+    // Replace decodedData with the new buffer
+    free(decodedData);       // free original
+    decodedData = roundtrip; // updated pointer
+    decodedSize = b64DecodedSize; // updated size
+}'''
 
 # def extract_decrypt_function(file_path, new_name=None):
 #     """Extracts the decryptFile function and optionally renames it."""
