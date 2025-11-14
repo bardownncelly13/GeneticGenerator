@@ -13,6 +13,8 @@ import base64
 import CreateDropper
 import GenerateRES
 import BuildExes
+import sys
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 from GeneticPart import Genetic as Gene
 
 
