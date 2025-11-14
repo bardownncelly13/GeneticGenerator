@@ -66,7 +66,7 @@ if not cpp_files:
 
 cpp_file1 = os.path.join( "generated/crypt", random.choice(cpp_files))
 #temprorary !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-cpp_file1 = "/home/rcof8/repos/GeneticAlgo/AzureMalGen/generated/crypt/generated_script_20251113_192331.cpp"
+#cpp_file1 = "/home/rcof8/repos/GeneticAlgo/AzureMalGen/generated/crypt/generated_script_20251113_192331.cpp"
 encrypt_script = os.path.join(os.path.dirname(__file__), "encrypt.py")  
 cmd = [
     "python3",

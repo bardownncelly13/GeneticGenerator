@@ -9,7 +9,9 @@ encrypted_binaries/
 Generated_DropperCPPfiles/
 resfiles/
 finalexes/
+base64encrypted/
 # C extensions
+tester/
 *.so
 venv/
 /.vscode/
