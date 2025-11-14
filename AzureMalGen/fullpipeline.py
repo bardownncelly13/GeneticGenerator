@@ -191,9 +191,9 @@ if(genetic):                                                                    
         best = Gene.genetic_algo(
             4,                     # popsize
             8,                     # generations
-            str(exe_path),         # input EXE
-            goodware_dir,          # goodware folder
-            str(temp_out),         # GA output temp file
+            Path(exe_path),         # input EXE
+            Path(goodware_dir),          # goodware folder
+            Path(temp_out),         # GA output temp file
             mutatableSections      # masks
         )
         if temp_out.exists():
