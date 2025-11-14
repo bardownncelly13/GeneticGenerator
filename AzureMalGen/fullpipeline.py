@@ -107,7 +107,9 @@ if not encrypted_files:
 
 # --- SECOND ENCRYPTION PASS ---
 second_output_folder = os.path.join(os.path.dirname(__file__), "generated/double_encrypted_binaries")
-cpp_file2 = os.path.join("generated/crypt", random.choice(cpp_files))
+cpp_file2 = cpp_file1                                                                                                   #if you have < 2 cpp files then this will infinate loop carefull
+while cpp_file2 == cpp_file1:
+    cpp_file2 = os.path.join("generated/crypt", random.choice(cpp_files))
 print(cpp_file2)
 
 cmd = [
