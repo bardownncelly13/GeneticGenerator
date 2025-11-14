@@ -1,17 +1,11 @@
 import os
 import random
-import struct
 from pathlib import Path
 from typing import List, Tuple, Optional
-import hashlib
-import math
-import tempfile
 from collections import Counter
-import math
 import mark_reasorces_mask
 import requests
 from io import BytesIO
-import re
 try:
     import lief
 except Exception:
@@ -116,7 +110,7 @@ def fitness(chromosome: bytes, original: bytes = None) -> float:
         response.raise_for_status()
 
         result = response.json()
-        //print(result)
+        #print(result)
 
         # Extract score from JSON if present
         if filename in result:
