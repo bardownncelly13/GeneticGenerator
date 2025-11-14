@@ -14,7 +14,11 @@ import CreateDropper
 import GenerateRES
 import BuildExes
 import sys
-sys.path.append(str(Path(__file__).resolve().parent.parent))
+BASE = Path(__file__).resolve().parent       
+ROOT = BASE.parent                            
+GEN_PART = ROOT / "GeneticPart"             
+sys.path.append(str(ROOT))
+sys.path.append(str(GEN_PART))
 from GeneticPart import Genetic as Gene
 
 
