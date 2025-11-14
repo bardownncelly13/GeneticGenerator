@@ -15,7 +15,6 @@ def create_crypt():
     )
     models = project.get_openai_client(api_version="2024-10-21")
     encryption_types = [
-    "XOR cipher",
     "One-time pad cipher",
     "bitwise rotation cipher",
     "byte shifting cipher",
@@ -25,7 +24,6 @@ def create_crypt():
     "modulo addition cipher",
     "modulo subtraction cipher",
     "circular bit shift cipher",
-    "byte-wise addition/subtraction cipher",
     "byte-wise multiplication/division cipher",
     "byte-wise negation cipher",
     "block XOR cipher",
@@ -53,7 +51,7 @@ def create_crypt():
                     "All outputs should be printed to the terminal (stdout)."
                     "If multiple correct implementations exist, prefer a less common or creative one — vary style, algorithmic approach, and naming."
                     "The functions should read and write files in **binary mode**. Avoid using text-only operations like std::isalpha or std::tolower."
-                    "Prefer a simple per-byte transformation using the key (like XOR or byte shift) that works for arbitrary binary data."
+                    "Prefer a simple per-byte transformation using the key that works for arbitrary binary data. stay away from xor though"
 
                 ),
             },
