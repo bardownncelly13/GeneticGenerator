@@ -74,7 +74,6 @@ if not cpp_files:
     raise FileNotFoundError("No C++ files found in generated/crypt!")
 
 cpp_file1 = os.path.join( "generated/crypt", random.choice(cpp_files))
-cpp_file1 = Path("/home/kali/Documents/MalGen/AzureMalGen/generated/crypt/generated_script_20251114_121155.cpp")
 print(cpp_file1)
 
 encrypt_script = os.path.join(os.path.dirname(__file__), "encrypt.py")  
