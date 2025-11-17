@@ -48,7 +48,7 @@ code += "\n" + wrapper_main
 
 with open(cpp_file, "w", encoding="utf-8") as f:
     f.write(code)
-print("📝 main() replaced with wrapper main()")
+print("main() replaced with wrapper main()")
 
 compile_result = subprocess.run(
     [ "x86_64-w64-mingw32-g++",
@@ -60,7 +60,7 @@ compile_result = subprocess.run(
 )
 
 if compile_result.returncode != 0:
-    print(f"❌ Compilation failed:\n{compile_result.stderr}")
+    print(f"Compilation failed:\n{compile_result.stderr}")
     exit(1)
 
 for bin_file in binaries:
@@ -69,9 +69,9 @@ for bin_file in binaries:
     run_result = subprocess.run(["wine",exe_file, bin_file, output_file, str(key)],
                                 capture_output=True, text=True)
     if run_result.returncode != 0:
-        print(f"⚠️ Failed to encrypt {bin_file}:\n{run_result.stderr}")
+        print(f"Failed to encrypt {bin_file}:\n{run_result.stderr}")
     else:
-        print(f"✅ {bin_file} -> {output_file}")
+        print(f"{bin_file} -> {output_file}")
 
 os.remove(exe_file)
-print(f"🗑 Deleted temporary executable: {exe_file}")
+print(f"Deleted temporary executable: {exe_file}")

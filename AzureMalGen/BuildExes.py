@@ -28,7 +28,6 @@ def build_one(cpp_path: Path, rc_path: Path, out_dir: Path) -> bool:
     obj_path = out_dir / f"{name}.o"
     exe_path = out_dir / f"{name}.exe"
 
-    # Compile RC → .o
     print(f"[windres] {rc_path.name} → {obj_path.name}")
     res_cmd = [WINDRES, str(rc_path), "-O", "coff", "-o", str(obj_path)]
     try:
@@ -37,12 +36,11 @@ def build_one(cpp_path: Path, rc_path: Path, out_dir: Path) -> bool:
         print(f" Failed to compile resource for {name}")
         return False
 
-    # Link .cpp + .o → .exe
     print(f"[g++] {cpp_path.name} + {obj_path.name} → {exe_path.name}")
     gpp_cmd = [GPP, str(cpp_path), str(obj_path)] + LINK_FLAGS + ["-o", str(exe_path)]
     try:
         subprocess.run(gpp_cmd, check=True)
-        print(f"✅ Built {exe_path}")
+        print(f"Built {exe_path}")
         return True
     except subprocess.CalledProcessError:
         print(f" Build failed for {name}")

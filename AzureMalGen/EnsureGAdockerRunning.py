@@ -22,7 +22,7 @@ def ensure_container_running():
         "-m", "1g",
         "zacharydaniel229/malware-defense:latest"
     ])
-    for _ in range(20):  # ~20 seconds max
+    for _ in range(20): 
         if is_port_open():
             print("Container is now running.")
             return

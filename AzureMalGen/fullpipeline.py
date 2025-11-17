@@ -21,6 +21,21 @@ sys.path.append(str(ROOT))
 sys.path.append(str(GEN_PART))
 from GeneticPart import Genetic as Gene
 
+parser = argparse.ArgumentParser(description="Full pipeline of encrypting and decrypting")
+parser.add_argument("--binaries", "--b", nargs="+", required=True, help="List of binaries or folders to encrypt")
+parser.add_argument("--EncryptCount","--e", type=int, default=1, help="How many times to generate encryption types")
+parser.add_argument("--key", type=int, default=random.randint(1, 255), help="Encryption key")
+parser.add_argument("--genetic","--g",type=int,default=0,help = "apply the genetic algo to the binary")
+parser.add_argument("--extrareasorces","--eg", type=int,default =0, help = "how much extragoodware to append to reasorces")
+parser.add_argument("--base64",type = int,default=0,help="add base64 encoding to the binary")
+args = parser.parse_args()
+
+binaries = args.binaries
+key = args.key
+encrypt_count = args.EncryptCount
+extragoodware = args.extrareasorces
+genetic = args.genetic
+b64 = args.base64
 
 base_dirs = {
     "crypt": "generated/crypt",
@@ -48,23 +63,9 @@ for name, path in base_dirs.items():
             elif os.path.isdir(file_path):
                 shutil.rmtree(file_path)
         except Exception as e:
-            print(f"⚠️ Could not remove {file_path}: {e}")
+            print(f"Could not remove {file_path}: {e}")
 
-parser = argparse.ArgumentParser(description="Full pipeline of encrypting and decrypting")
-parser.add_argument("--binaries", "--b", nargs="+", required=True, help="List of binaries or folders to encrypt")
-parser.add_argument("--EncryptCount","--e", type=int, default=1, help="How many times to generate encryption types")
-parser.add_argument("--key", type=int, default=random.randint(1, 255), help="Encryption key")
-parser.add_argument("--genetic","--g",type=int,default=0,help = "apply the genetic algo to the binary")
-parser.add_argument("--extrareasorces","--eg", type=int,default =0, help = "how much extragoodware to append to reasorces")
-parser.add_argument("--base64",type = int,default=0,help="add base64 encoding to the binary")
-args = parser.parse_args()
 
-binaries = args.binaries
-key = args.key
-encrypt_count = args.EncryptCount
-extragoodware = args.extrareasorces
-genetic = args.genetic
-b64 = args.base64
 
 for i in range(encrypt_count): #generates encrypt_count different encryption scripts in generated/crypt             1 create the enryptions 
     CreateCrypt.create_crypt()
@@ -87,9 +88,9 @@ cmd.extend(["--binaries"] + binaries)
 result = subprocess.run(cmd, capture_output=True, text=True)
 
 if result.returncode != 0:
-    print(f"❌ Encryption script failed:\n{result.stderr}")
+    print(f"Encryption script failed:\n{result.stderr}")
 else:
-    print(f"✅ Encryption script ran successfully:\n{result.stdout}")
+    print(f"first Encryption success:\n{result.stdout}")
 print(cpp_file1)
 first_output_folder = os.path.join(os.path.dirname(__file__), "generated/encrypted_binaries")
 
@@ -101,7 +102,7 @@ encrypted_files = [
 ]
 
 if not encrypted_files:
-    print("❌ No encrypted files found after first encryption.")
+    print("No encrypted files found after first encryption.")
     raise SystemExit(1)
 
 # --- SECOND ENCRYPTION PASS ---
@@ -123,10 +124,10 @@ cmd.extend(["--binaries"] + encrypted_files)
 result = subprocess.run(cmd, capture_output=True, text=True)
 
 if result.returncode != 0:
-    print(f"❌ Second encryption failed:\n{result.stderr}")
+    print(f"Second encryption failed:\n{result.stderr}")
     raise SystemExit(1)
 else:
-    print(f"✅ Second encryption ran successfully:\n{result.stdout}")
+    print(f"Second encryption success:\n{result.stdout}")
 
 print("Second encryptor used:", cpp_file2)
 
@@ -176,7 +177,7 @@ for rc_file in os.listdir("generated/resfiles"):                                
         with open(dropper_cpp_path, "w", encoding="utf-8") as f:
             f.write(cpp_content)
 
-        print(f"✅ Created dropper CPP: {dropper_cpp_path}")
+        print(f"Created dropper CPP: {dropper_cpp_path}")
 
         CreateDropper.create_dropper(dropper_cpp_path, cpp_file1, cpp_file2, key, key,b64)
 
@@ -195,9 +196,9 @@ if(genetic):                                                                    
         best = Gene.genetic_algo(
             4,                     # popsize
             8,                     # generations
-            Path(exe_path),         # input EXE
-            Path(goodware_dir),          # goodware folder
-            Path(temp_out),         # GA output temp file
+            Path(exe_path),        # input EXE
+            Path(goodware_dir),    # goodware folder
+            Path(temp_out),        # GA output temp file
             mutatableSections      # masks
         )
         if temp_out.exists():

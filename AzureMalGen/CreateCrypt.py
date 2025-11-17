@@ -24,6 +24,7 @@ def create_crypt():
     "modulo addition cipher",
     "modulo subtraction cipher",
     "circular bit shift cipher",
+    "byte-wise addition/subtraction cipher",
     "byte-wise multiplication/division cipher",
     "byte-wise negation cipher",
     "block XOR cipher",
@@ -51,8 +52,7 @@ def create_crypt():
                     "All outputs should be printed to the terminal (stdout)."
                     "If multiple correct implementations exist, prefer a less common or creative one — vary style, algorithmic approach, and naming."
                     "The functions should read and write files in **binary mode**. Avoid using text-only operations like std::isalpha or std::tolower."
-                    "Prefer a complex but lossless and inplace per-byte transformation using the key that works for arbitrary binary data. stay away from xor though"
-                    "use as much code as possible to get the task done so it is explainable"
+                    "Prefer a simple per-byte transformation using the key that works for arbitrary binary data."
 
                 ),
             },

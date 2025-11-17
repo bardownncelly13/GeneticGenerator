@@ -25,7 +25,7 @@ def create_resource_file(binary_path, output_folder, extragoodware=0):
         else:
             selected = random.sample(goodware_files, min(extragoodware, len(goodware_files)))
 
-            resource_id = 102  # Start AFTER 101
+            resource_id = 102  #101 by deafault is the actual exe
             for gw_path in selected:
                 gw_path_esc = gw_path.replace("\\", "\\\\")
                 rc_lines.append(f"#define IDR_EXE{resource_id} {resource_id}\n")
@@ -37,7 +37,7 @@ def create_resource_file(binary_path, output_folder, extragoodware=0):
     with open(rc_filename, "w", encoding="utf-8") as f:
         f.writelines(rc_lines)
 
-    print(f"✅ Created resource file: {rc_filename}")
+    print(f"Created resource file: {rc_filename}")
 
 
 

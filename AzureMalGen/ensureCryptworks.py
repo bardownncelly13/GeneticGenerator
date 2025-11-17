@@ -11,7 +11,7 @@ LINK_FLAGS = [
 
 def test(cpp_path, compiler="x86_64-w64-mingw32-g++", key=77, block_size=1024):
     if not os.path.exists(cpp_path):
-        print(f"❌ File not found: {cpp_path}")
+        print(f"File not found: {cpp_path}")
         return 0
 
     test_cpp = cpp_path.replace(".cpp", "_test.cpp")
@@ -90,12 +90,12 @@ int main() {{
 
     exe_test = test_cpp.replace(".cpp", ".exe")
 
-    print(f"🧪 Compiling test: {test_cpp}")
+    print(f"Compiling test: {test_cpp}")
     compile_cmd = [compiler, "-std=c++17", test_cpp, "-o", exe_test] + LINK_FLAGS
     result = subprocess.run(compile_cmd, capture_output=True, text=True)
 
     if result.returncode != 0:
-        print("❌ Compilation failed:\n", result.stderr)
+        print("Compilation failed:\n", result.stderr)
         _cleanup(test_cpp, exe_test)
         return 0
 
@@ -104,14 +104,14 @@ int main() {{
     else:
         run_cmd = [exe_test]
 
-    print("🚀 Running encryption/decryption roundtrip test...")
+    print("Running encryption/decryption roundtrip test...")
     run_result = subprocess.run(run_cmd, capture_output=True, text=True)
     passed = run_result.returncode == 1
 
     if not passed:
-        print("❌ Roundtrip failed.")
+        print("Roundtrip failed.")
     else:
-        print("✅ Roundtrip passed.")
+        print("Roundtrip passed.")
 
     _cleanup(test_cpp, exe_test, "test_input.bin", "test_enc.bin", "test_dec.bin")
     return 1 if passed else 0
