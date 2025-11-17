@@ -147,7 +147,7 @@ if b64:
             with open(out_file, "wb") as f:
                 f.write(encoded)
 
-            print(f"📄 Base64 encoded: {out_file}")
+            print(f"Base64 encoded: {out_file}")
 
     working_binary_dir = base64_dir
 
@@ -195,7 +195,7 @@ if(genetic):                                                                    
         temp_out = exe_path.with_suffix(".best.exe")
         best = Gene.genetic_algo(
             4,                     # popsize
-            8,                     # generations
+            10,                    # generations
             Path(exe_path),        # input EXE
             Path(goodware_dir),    # goodware folder
             Path(temp_out),        # GA output temp file
