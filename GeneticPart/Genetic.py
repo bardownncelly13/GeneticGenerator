@@ -67,7 +67,6 @@ def fitness(chromosome: bytes, original: bytes = None) -> float:
     endpoint = "/predict"
     url = f"http://127.0.0.1:8080{endpoint}"
 
-    # You MUST provide a filename for multipart/form-data
     filename = "sample.exe"
 
     file_obj = BytesIO(chromosome)
@@ -83,7 +82,6 @@ def fitness(chromosome: bytes, original: bytes = None) -> float:
         result = response.json()
         print(result)
 
-        # Extract score from JSON if present
         if filename in result:
             return float(result[filename].get("p_malware", 0.0))
 
@@ -96,7 +94,6 @@ def fitness(chromosome: bytes, original: bytes = None) -> float:
     endpoint = "/predict"
     url = f"http://127.0.0.1:8080{endpoint}"
 
-    # You MUST provide a filename for multipart/form-data
     filename = "sample.exe"
 
     file_obj = BytesIO(chromosome)
@@ -110,9 +107,7 @@ def fitness(chromosome: bytes, original: bytes = None) -> float:
         response.raise_for_status()
 
         result = response.json()
-        #print(result)
 
-        # Extract score from JSON if present
         if filename in result:
             return float(result[filename].get("p_malware", 0.0))
 
@@ -131,7 +126,6 @@ def tournament_selection(pop: List[bytes], fit_scores: List[float], k: int = TOU
 
 def crossover(p1: bytes, p2: bytes, mask: List[bool]) -> Tuple[bytes, bytes]: 
 
-    # mutate with mask on imutable sections
     L = min(len(p1), len(p2))
     p1, p2 = p1[:L], p2[:L]
 
@@ -152,7 +146,7 @@ def crossover(p1: bytes, p2: bytes, mask: List[bool]) -> Tuple[bytes, bytes]:
 def mutate(chrom: bytes, mask: List[bool], goodware_files: List[Path]) -> bytes: 
     c = bytearray(chrom)
     length = len(c)
-    if goodware_files and random.random() < 0.3:
+    if goodware_files and random.random() < 0.7:
         gw = random.choice(goodware_files)
         chunk = _read_random_chunk(gw, max_bytes=MAX_APPEND_CHUNK)
         if chunk:
@@ -204,13 +198,10 @@ def genetic_algo(popsize: int,
         raise ValueError(f"No .exe files found in {goodware_path}")
 
     population = generate_population(popsize, base, goodware_path)
-    #####
-    ###!!!! important 
-    #####
+
     if mask_ids is not None:
         IMMUTABLE_RANGES = mark_reasorces_mask.getmask(exe_path, mask_ids)
     else:
-        # Default → no mask
         IMMUTABLE_RANGES = []
     mask = make_mask(TARGET_SIZE, IMMUTABLE_RANGES)
 
@@ -235,7 +226,7 @@ def genetic_algo(popsize: int,
     if save_best_to:
         with save_best_to.open("wb") as f:
             f.write(best_overall)
-        print(f"[i] Best individual written raw to {save_best_to} (do not execute)")
+        print(f"[i] Best individual written raw to {save_best_to}")
 
     return best_overall
 
@@ -245,8 +236,8 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--base", required=True, help="Base EXE to seed population")
     p.add_argument("--goodware", required=True, help="Directory containing benign EXEs to sample chunks from")
-    p.add_argument("--pop", type=int, default=4, help="Population size (even)")
-    p.add_argument("--gens", type=int, default=8, help="Generations")
+    p.add_argument("--pop", type=int, default=10, help="Population size (even)")
+    p.add_argument("--gens", type=int, default=30, help="Generations")
     p.add_argument("--out", default=None, help="Optional output file to save best individual (raw bytes)")
     p.add_argument("--masks", nargs="*", type=int, default=None)
     args = p.parse_args()
